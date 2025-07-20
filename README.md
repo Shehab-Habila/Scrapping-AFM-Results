@@ -12,7 +12,7 @@ It reads a list of student IDs from an Excel file, queries the website for each 
 
 ---
 
-## 🛠️ Requirements
+## Requirements
 
 - Python 3.x
 - Firefox browser
