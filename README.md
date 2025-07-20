@@ -24,7 +24,7 @@ It reads a list of student IDs from an Excel file, queries the website for each 
 Install the required Python packages:
 
 ```bash
-pip install selenium pandas beautifulsoup4 openpyxl
+pip install selenium pandas bs4 os time
 ```
 
 ---
