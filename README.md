@@ -30,5 +30,12 @@ pip install selenium pandas bs4 os time
 
 ---
 
-## Contact
+## License: Apache License
+- Grants the right to modify and redistribute the code.
+- Requires clear attribution to the [original source](https://github.com/Shehab-Habila/Scrapping-AFM-Results/)
+
+
+---
+
+## Contact Me
 - [LinkedIn](https://www.linkedin.com/in/shehab-habila/)
