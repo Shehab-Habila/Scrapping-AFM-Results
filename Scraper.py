@@ -38,7 +38,7 @@ service = Service(geckodriver_path)
 driver = webdriver.Firefox(service=service, options=firefox_options)
 
 # Load student IDs from Excel
-df = pd.read_excel("students_data.xlsx")  # Ensure the file exists
+df = pd.read_excel("Students Data.xlsx")  # Ensure the file exists
 ids = df["ID"].astype(str).tolist()
 
 # Output file
@@ -46,10 +46,10 @@ output_file = "student_results.xlsx"
 
 # Check if the output file exists, if not, create it with headers
 if not os.path.exists(output_file):
-    pd.DataFrame(columns=["ID", "EGU", "GIT", "Skills", "Semester Total"]).to_excel(output_file, index=False)
+    pd.DataFrame(columns=["ID", "EGU", "GIT", "Communication Skills", "CNS", "Concepts 1", "Concepts 2" , "Professionalism", "Filler", "Year Total"]).to_excel(output_file, index=False)
 
 # URL of the results page
-url = "http://www.med.alexu.edu.eg/results/index.php/2025/02/12/2ndresults/"
+url = "http://www.med.alexu.edu.eg/results/index.php/2025/07/20/2ndresults2/"
 
 for student_id in ids:
     try:
@@ -87,18 +87,21 @@ for student_id in ids:
         total_rows = [row for row in soup.find_all("tr") if "total" in row.text.lower()]
 
         # Extract values for each category
-        total_values = ["Not Found"] * 4  # Default values in case some rows are missing
+        total_values = ["Not Found"] * 9  # Default values in case some rows are missing
 
-        for i, name in enumerate(["EGU", "GIT", "Skills", "Semester Total"]):
+        for i, name in enumerate(["EGU", "GIT", "Communication Skills", "CNS", "Concepts 1", "Concepts 2" , "Professionalism", "Filler", "Year Total"]):
             if len(total_rows) > i:
                 total_values[i] = total_rows[i].find_all("td")[-1].get_text(strip=True)
 
-        print(f"✅ Student ID: {student_id} | EGU: {total_values[0]}, GIT: {total_values[1]}, Skills: {total_values[2]}, Semester Total: {total_values[3]}")
+        print(f"✅ Student ID: {student_id} | EGU: {total_values[0]}, GIT: {total_values[1]}, Communication: {total_values[2]}, CNS: {total_values[3]}, Concept I: {total_values[4]}, Concept II: {total_values[5]}, Professionalism: {total_values[6]}, Year Total: {total_values[8]}")
 
         # Save to Excel immediately
         new_entry = pd.DataFrame([{
             "ID": student_id, "EGU": total_values[0], "GIT": total_values[1], 
-            "Skills": total_values[2], "Semester Total": total_values[3]
+            "Communication": total_values[2], "CNS": total_values[3],
+            "Concepts 1": total_values[4], "Concepts 2": total_values[5],
+            "Professionalism": total_values[6], "Filler": total_values[7],
+            "Year Total": total_values[8]
         }])
         with pd.ExcelWriter(output_file, mode="a", if_sheet_exists="overlay", engine="openpyxl") as writer:
             new_entry.to_excel(writer, index=False, header=False, startrow=writer.sheets["Sheet1"].max_row)
@@ -109,7 +112,11 @@ for student_id in ids:
     except Exception as e:
         print(f"❌ Error with ID {student_id}: {e}")
         new_entry = pd.DataFrame([{
-            "ID": student_id, "EGU": "Error", "GIT": "Error", "Skills": "Error", "Semester Total": "Error"
+            "ID": student_id, "EGU": "Error", "GIT": "Error", 
+            "Communication": "Error", "CNS": "Error",
+            "Concepts 1": "Error", "Concepts 2": "Error",
+            "Professionalism": "Error", "Filler": "Error",
+            "Year Total": "Error"
         }])
         with pd.ExcelWriter(output_file, mode="a", if_sheet_exists="overlay", engine="openpyxl") as writer:
             new_entry.to_excel(writer, index=False, header=False, startrow=writer.sheets["Sheet1"].max_row)
